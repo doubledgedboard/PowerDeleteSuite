@@ -497,29 +497,29 @@ var pd = {
     },
     edit: function (item) {
       if (pd.performActions) {
-        setTimeout(() => {
-          $.ajax({
-            url: '/api/editusertext',
-            method: 'post',
-            data: {
-              thing_id: item.data.name,
-              text: pd.task.config.editText,
-              id: '#form-'+item.data.name,
-              r: item.data.subreddit,
-              uh: pd.config.uh,
-              renderstyle: 'html'
-            }
-          }).then(function() {
+        $.ajax({
+          url: '/api/editusertext',
+          method: 'post',
+          data: {
+            thing_id: item.data.name,
+            text: pd.task.config.editText,
+            id: '#form-'+item.data.name,
+            r: item.data.subreddit,
+            uh: pd.config.uh,
+            renderstyle: 'html'
+          }
+        }).then(function() {
+          setTimeout(function () {
             pd.task.items[0].pdEdited = true;
             pd.actions.children.handleSingle();
-          }, function () {
-            pd.task.info.errors++;
-            if (! confirm('Error editing '+(item.kind == 't3' ? 'post':'comment')+', would you like to retry?')) {
-              item.pdEdited = true;
-            }
-            pd.actions.children.handleSingle();
-          });
-        }, 5100);
+          }, 5100);
+        }, function () {
+          pd.task.info.errors++;
+          if (! confirm('Error editing '+(item.kind == 't3' ? 'post':'comment')+', would you like to retry?')) {
+            item.pdEdited = true;
+          }
+          pd.actions.children.handleSingle();
+        });
       } else {
         pd.task.items[0].pdEdited = true;
         pd.actions.children.handleSingle();
